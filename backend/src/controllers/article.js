@@ -29,5 +29,29 @@ var controller = {
                 articleStored
             })
         });
+    },
+
+    // Metodo para listar los articulos:
+    getArticles: (req, res) => {
+        var query = Article.find({});
+
+        query.sort('-date').exec((err, articles) =>{
+            if(err){
+                return res.status(500).send({
+                    status: 'error',
+                    message: 'Error al extraer los datos'
+                })
+            }
+            if(!articles){
+                return res.status(404).send({
+                    status: 'error',
+                    message: 'No hay articulos para mostrar'
+                })
+            }
+            return res.status(200).send({
+                status: 'success',
+                articles
+            })
+        })
     }
 }
