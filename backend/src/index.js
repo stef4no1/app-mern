@@ -2,10 +2,17 @@
 
 const express = require('express');
 const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
 
 const app = express();
 
 const port = 3900; //El puerto donde se abre el programa
+
+var url = 'mongodb://localhost:27017/api_rest_reactnotas'; 
+
+mongoose.Promise = global.Promise;
+
+var article_routes = require('./routes/article');
 
 // Cargamos el body-parser, es un middleware para analizar cuerpos a traves de la URL
 
@@ -23,6 +30,11 @@ app.use((req, res, next) => {
     next();
 })
 
-app.listen(port, ()=> {
-    console.log('Lanzando la app en el puerto ' + port);
+app.use('/api', article_routes);
+
+mongoose.connect(url, {useNewUrlParser: true}).then(() => {
+    console.log('Conexion a la bdd realizada con exito!');
+    app.listen(port, ()=> {
+        console.log('Lanzando la app en el puerto ' + port);
+    })
 })
